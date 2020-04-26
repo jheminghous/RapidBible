@@ -13,6 +13,7 @@ public class MainActivity extends AppCompatActivity implements BibleProvider
 
     private Toolbar _toolbar;
 
+    private SplashFragment _splashFragment;
     private BibleFragment _bibleFragment;
     private ReferenceFragment _referenceFragment;
 
@@ -25,20 +26,19 @@ public class MainActivity extends AppCompatActivity implements BibleProvider
 
         setContentView(R.layout.activity_main);
 
-        // TODO: load on another thread
-        _version = new BibleVersion("KJV", getResources().openRawResource(R.raw.kjv));
-
-        _toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(_toolbar);
-
+        _splashFragment = new SplashFragment();
         _bibleFragment = new BibleFragment();
         _referenceFragment = new ReferenceFragment();
 
         final FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction()
-                       .add(R.id.content, _bibleFragment)
-                       .commit();
         fragmentManager.addOnBackStackChangedListener(_backStackListener);
+
+        fragmentManager.beginTransaction()
+                       .add(R.id.content, _splashFragment)
+                       .commit();
+
+        _toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(_toolbar);
 
         _toolbar.setOnClickListener(new View.OnClickListener()
         {
@@ -58,12 +58,36 @@ public class MainActivity extends AppCompatActivity implements BibleProvider
     }
 
     @Override
+    protected void onResume()
+    {
+        super.onResume();
+
+        new VersionLoader("KJV",
+                          getResources().openRawResource(R.raw.kjv),
+                          new VersionLoader.Listener()
+                          {
+                              @Override
+                              public void onLoaded(BibleVersion version)
+                              {
+                                  _version = version;
+
+                                  getSupportFragmentManager().beginTransaction()
+                                                             .replace(R.id.content, _bibleFragment)
+                                                             .commit();
+
+                                  _toolbar.setVisibility(View.VISIBLE);
+                              }
+                          });
+    }
+
+    @Override
     protected void onDestroy()
     {
         getSupportFragmentManager().removeOnBackStackChangedListener(_backStackListener);
 
         _referenceFragment = null;
         _bibleFragment = null;
+        _splashFragment = null;
 
         _toolbar = null;
 

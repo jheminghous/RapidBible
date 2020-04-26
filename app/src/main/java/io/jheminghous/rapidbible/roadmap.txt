@@ -1,8 +1,7 @@
--Optimize version loading (currently takes ~3 seconds to start up)
+-Create logo/branding
 -Add settings
   -Font size
   -Dark mode
--Create logo/branding
 -Add search
 -Add highlights
 -Add notes
