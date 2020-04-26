@@ -1,0 +1,10 @@
+-Optimize version loading (currently takes ~3 seconds to start up)
+-Add settings
+  -Font size
+  -Dark mode
+-Create logo/branding
+-Add search
+-Add highlights
+-Add notes
+-Add sharing (copy, text message, email, etc.)
+-Add other versions
