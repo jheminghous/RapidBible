@@ -1,8 +1,9 @@
--Add settings
+-Settings
   -Font size
   -Dark mode
--Add search
--Add highlights
--Add notes
--Add sharing (copy, text message, email, etc.)
--Add other versions
+-Search
+-Highlighting or underlining
+-Sharing (copy, text message, email, etc.)
+-Notes
+-Other versions (NKJV, ESV, NASB, NIV)
+-Reading plans
