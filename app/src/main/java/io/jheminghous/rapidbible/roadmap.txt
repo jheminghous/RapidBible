@@ -1,4 +1,3 @@
--Create logo/branding
 -Add settings
   -Font size
   -Dark mode

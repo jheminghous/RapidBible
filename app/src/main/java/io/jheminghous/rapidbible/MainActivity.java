@@ -3,6 +3,7 @@ package io.jheminghous.rapidbible;
 import android.os.Bundle;
 import android.view.View;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentManager;
@@ -115,6 +116,13 @@ public class MainActivity extends AppCompatActivity implements BibleProvider
     }
 
     @Override
+    public boolean onSupportNavigateUp()
+    {
+        onBackPressed();
+        return true;
+    }
+
+    @Override
     public void setCurrentItem(BibleItem item)
     {
         _currentItem = item;
@@ -131,9 +139,23 @@ public class MainActivity extends AppCompatActivity implements BibleProvider
         @Override
         public void onBackStackChanged()
         {
+            ActionBar actionBar = getSupportActionBar();
+
             if (_bibleFragment.isVisible())
             {
                 _bibleFragment.scrollToItem(_currentItem);
+
+                if (actionBar != null)
+                {
+                    actionBar.setDisplayHomeAsUpEnabled(false);
+                }
+            }
+            else
+            {
+                if (actionBar != null)
+                {
+                    actionBar.setDisplayHomeAsUpEnabled(true);
+                }
             }
         }
     };
