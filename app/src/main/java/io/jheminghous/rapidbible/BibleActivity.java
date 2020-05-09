@@ -1,14 +1,18 @@
 package io.jheminghous.rapidbible;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.preference.PreferenceManager;
 
-public class MainActivity extends AppCompatActivity implements BibleProvider
+public class BibleActivity extends AppCompatActivity implements BibleProvider
 {
     private BibleVersion _version;
 
@@ -25,18 +29,17 @@ public class MainActivity extends AppCompatActivity implements BibleProvider
     {
         super.onCreate(savedInstanceState);
 
+        setTheme(R.style.AppTheme);
+        
         setContentView(R.layout.activity_main);
 
         _splashFragment = new SplashFragment();
         _bibleFragment = new BibleFragment();
         _referenceFragment = new ReferenceFragment();
 
-        final FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.addOnBackStackChangedListener(_backStackListener);
+        getSupportFragmentManager().addOnBackStackChangedListener(_backStackListener);
 
-        fragmentManager.beginTransaction()
-                       .add(R.id.content, _splashFragment)
-                       .commit();
+        showFragment(_splashFragment, false);
 
         _toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(_toolbar);
@@ -49,11 +52,7 @@ public class MainActivity extends AppCompatActivity implements BibleProvider
                 if (!_bibleFragment.isVisible()) return;
 
                 _currentItem = _bibleFragment.getCurrentItem();
-
-                fragmentManager.beginTransaction()
-                               .replace(R.id.content, _referenceFragment)
-                               .addToBackStack(null)
-                               .commit();
+                showFragment(_referenceFragment, true);
             }
         });
     }
@@ -62,6 +61,8 @@ public class MainActivity extends AppCompatActivity implements BibleProvider
     protected void onResume()
     {
         super.onResume();
+
+        final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
 
         new VersionLoader("KJV",
                           getResources().openRawResource(R.raw.kjv),
@@ -72,9 +73,7 @@ public class MainActivity extends AppCompatActivity implements BibleProvider
                               {
                                   _version = version;
 
-                                  getSupportFragmentManager().beginTransaction()
-                                                             .replace(R.id.content, _bibleFragment)
-                                                             .commit();
+                                  showFragment(_bibleFragment, false);
 
                                   _toolbar.setVisibility(View.VISIBLE);
                               }
@@ -98,15 +97,27 @@ public class MainActivity extends AppCompatActivity implements BibleProvider
     }
 
     @Override
-    public BibleVersion getVersion()
-    {
-        return _version;
-    }
-
-    @Override
     public Toolbar getToolbar()
     {
         return _toolbar;
+    }
+
+    @Override
+    public void showFragment(Fragment fragment, boolean addToBackStack)
+    {
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction()
+                                                            .replace(R.id.content, fragment);
+        if (addToBackStack)
+        {
+            ft.addToBackStack(null);
+        }
+        ft.commit();
+    }
+
+    @Override
+    public BibleVersion getVersion()
+    {
+        return _version;
     }
 
     @Override

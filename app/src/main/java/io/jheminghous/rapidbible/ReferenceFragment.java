@@ -1,6 +1,5 @@
 package io.jheminghous.rapidbible;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -32,28 +31,22 @@ public class ReferenceFragment extends Fragment
 
     private BibleItem _currentItem;
 
-    @Override
-    public void onAttach(@NonNull Context context)
-    {
-        super.onAttach(context);
-
-        try
-        {
-            _provider = (BibleProvider) context;
-        }
-        catch (ClassCastException e)
-        {
-            throw new IllegalArgumentException(context.toString() + " must implement" +
-                                               BibleProvider.class.getSimpleName());
-        }
-    }
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState)
     {
+        try
+        {
+            _provider = (BibleProvider) getActivity();
+        }
+        catch (ClassCastException e)
+        {
+            throw new IllegalArgumentException("Activity must implement" +
+                                               BibleProvider.class.getSimpleName());
+        }
+
         View view = inflater.inflate(R.layout.reference, container, false);
 
         _tabLayout = view.findViewById(R.id.tab_layout);
@@ -93,15 +86,9 @@ public class ReferenceFragment extends Fragment
         _linearLayoutManager = null;
         _gridLayoutManager = null;
 
-        super.onDestroyView();
-    }
-
-    @Override
-    public void onDetach()
-    {
         _provider = null;
 
-        super.onDetach();
+        super.onDestroyView();
     }
 
     private TabLayout.OnTabSelectedListener _tabListener = new TabLayout.OnTabSelectedListener()

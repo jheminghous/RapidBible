@@ -1,5 +1,9 @@
 package io.jheminghous.rapidbible;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +16,10 @@ import java.util.Locale;
 
 public class BibleAdapter extends RecyclerView.Adapter<BibleAdapter.ViewHolder>
 {
+    private static final int DEFAULT_FONT_SIZE = 16;
+    private static final int BOOK_SIZE_OFFSET = 4;
+    private static final int CHAPTER_SIZE_OFFSET = 2;
+
     private BibleVersion _version;
 
     BibleAdapter(BibleVersion version)
@@ -23,22 +31,47 @@ public class BibleAdapter extends RecyclerView.Adapter<BibleAdapter.ViewHolder>
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType)
     {
-        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+        Context context = parent.getContext();
 
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        int baseFontSize = DEFAULT_FONT_SIZE;
+        try
+        {
+            String fontSize = preferences.getString(context.getString(R.string.font_size_key),
+                                                    String.valueOf(DEFAULT_FONT_SIZE));
+            if (fontSize != null)
+            {
+                baseFontSize = Integer.parseInt(fontSize);
+            }
+        }
+        catch (Exception e)
+        {
+            // Do nothing
+        }
+
+        LayoutInflater inflater = LayoutInflater.from(context);
+        TextView view;
         if (viewType == BibleItem.Type.BOOK.ordinal())
         {
-            return new ViewHolder(inflater.inflate(R.layout.book, parent, false));
+            view = (TextView) inflater.inflate(R.layout.book, parent, false);
+            view.setTextSize(TypedValue.COMPLEX_UNIT_SP, baseFontSize + BOOK_SIZE_OFFSET);
         }
         else if (viewType == BibleItem.Type.CHAPTER.ordinal())
         {
-            return new ViewHolder(inflater.inflate(R.layout.chapter, parent, false));
+            view = (TextView) inflater.inflate(R.layout.chapter, parent, false);
+            view.setTextSize(TypedValue.COMPLEX_UNIT_SP, baseFontSize + CHAPTER_SIZE_OFFSET);
         }
         else if (viewType == BibleItem.Type.VERSE.ordinal())
         {
-            return new ViewHolder(inflater.inflate(R.layout.verse, parent, false));
+            view = (TextView) inflater.inflate(R.layout.verse, parent, false);
+            view.setTextSize(TypedValue.COMPLEX_UNIT_SP, baseFontSize);
+        }
+        else
+        {
+            throw new IllegalArgumentException();
         }
 
-        throw new IllegalArgumentException();
+        return new ViewHolder(view);
     }
 
     @Override
@@ -59,7 +92,7 @@ public class BibleAdapter extends RecyclerView.Adapter<BibleAdapter.ViewHolder>
         return _version.getItems().size();
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder
+    static class ViewHolder extends RecyclerView.ViewHolder
     {
         private TextView _textView;
 

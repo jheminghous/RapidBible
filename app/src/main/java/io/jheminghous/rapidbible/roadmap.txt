@@ -1,9 +1,7 @@
--Settings
-  -Font size
-  -Dark mode
--Search
--Highlighting or underlining
+-About
 -Sharing (copy, text message, email, etc.)
+-Highlighting or underlining
+-Search
 -Notes
 -Other versions (NKJV, ESV, NASB, NIV)
 -Reading plans

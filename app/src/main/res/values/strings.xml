@@ -4,4 +4,14 @@
     <string name="book">Book</string>
     <string name="chapter">Chapter</string>
     <string name="verse">Verse</string>
+
+    <string name="settings">Settings</string>
+    <string name="theme_key">theme</string>
+    <string name="theme_title">Theme</string>
+    <string name="font_size_key">font-size</string>
+    <string name="font_size_title">Font size</string>
+    <string name="position_key">position</string>
+    <string name="theme_entry_default">Default</string>
+    <string name="theme_entry_light">Light</string>
+    <string name="theme_entry_dark">Dark</string>
 </resources>

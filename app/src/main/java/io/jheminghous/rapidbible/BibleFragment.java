@@ -1,6 +1,5 @@
 package io.jheminghous.rapidbible;
 
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
@@ -8,12 +7,16 @@ import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -21,7 +24,6 @@ public class BibleFragment extends Fragment
 {
     private static final String TAG = BibleFragment.class.getSimpleName();
 
-    private static final String POSITION = "position";
     private static final long SAVE_INTERVAL_MILLIS = 1000;
 
     private BibleProvider _provider;
@@ -31,24 +33,10 @@ public class BibleFragment extends Fragment
 
     private TitleUpdater _titleUpdater;
 
+    private SettingsFragment _settingsFragment;
+
     private Handler _handler = new Handler();
     private long _nextSaveTime = SystemClock.uptimeMillis();
-
-    @Override
-    public void onAttach(@NonNull Context context)
-    {
-        super.onAttach(context);
-
-        try
-        {
-            _provider = (BibleProvider) context;
-        }
-        catch (ClassCastException e)
-        {
-            throw new IllegalArgumentException(context.toString() + " must implement" +
-                                               BibleProvider.class.getSimpleName());
-        }
-    }
 
     @Nullable
     @Override
@@ -56,13 +44,23 @@ public class BibleFragment extends Fragment
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState)
     {
+        try
+        {
+            _provider = (BibleProvider) getActivity();
+        }
+        catch (ClassCastException e)
+        {
+            throw new IllegalArgumentException("Activity must implement" +
+                                               BibleProvider.class.getSimpleName());
+        }
+
         _recyclerView = (RecyclerView) inflater.inflate(R.layout.list, container, false);
         _layoutManager = new LinearLayoutManager(getContext());
         _recyclerView.setLayoutManager(_layoutManager);
         _recyclerView.setAdapter(new BibleAdapter(_provider.getVersion()));
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
-        _layoutManager.scrollToPosition(preferences.getInt(POSITION, 0));
+        _layoutManager.scrollToPosition(preferences.getInt(getString(R.string.position_key), 0));
 
         _recyclerView.addOnScrollListener(_savePositionScrollListener);
 
@@ -70,7 +68,27 @@ public class BibleFragment extends Fragment
                                          _recyclerView,
                                          _provider.getVersion());
 
+        _settingsFragment = new SettingsFragment();
+
+        setHasOptionsMenu(true);
+
         return _recyclerView;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater)
+    {
+        inflater.inflate(R.menu.main, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item)
+    {
+        if (item.getItemId() == R.id.settings_item)
+        {
+            showSettings();
+        }
+        return false;
     }
 
     @Override
@@ -79,6 +97,14 @@ public class BibleFragment extends Fragment
         super.onStart();
 
         _titleUpdater.start();
+
+        FragmentActivity activity = getActivity();
+        if (activity != null &&
+            activity.getIntent().getBooleanExtra(SettingsFragment.CHANGING_THEME, false))
+        {
+            activity.getIntent().removeExtra(SettingsFragment.CHANGING_THEME);
+            showSettings();
+        }
     }
 
     @Override
@@ -92,6 +118,8 @@ public class BibleFragment extends Fragment
     @Override
     public void onDestroyView()
     {
+        _settingsFragment = null;
+
         _titleUpdater = null;
 
         _recyclerView.removeOnScrollListener(_savePositionScrollListener);
@@ -99,15 +127,9 @@ public class BibleFragment extends Fragment
         _recyclerView = null;
         _layoutManager = null;
 
-        super.onDestroyView();
-    }
-
-    @Override
-    public void onDetach()
-    {
         _provider = null;
 
-        super.onDetach();
+        super.onDestroyView();
     }
 
     BibleItem getCurrentItem()
@@ -146,6 +168,11 @@ public class BibleFragment extends Fragment
         }
     }
 
+    private void showSettings()
+    {
+        _provider.showFragment(_settingsFragment, true);
+    }
+
     private RecyclerView.OnScrollListener _savePositionScrollListener =
             new RecyclerView.OnScrollListener()
     {
@@ -174,7 +201,8 @@ public class BibleFragment extends Fragment
             SharedPreferences preferences =
                     PreferenceManager.getDefaultSharedPreferences(getContext());
             preferences.edit()
-                       .putInt(POSITION, _layoutManager.findFirstVisibleItemPosition())
+                       .putInt(getString(R.string.position_key),
+                               _layoutManager.findFirstVisibleItemPosition())
                        .apply();
         }
     };

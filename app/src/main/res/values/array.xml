@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="theme_entries">
+        <item>Default</item>
+        <item>Light</item>
+        <item>Dark</item>
+    </string-array>
+    <string-array name="theme_values">
+        <item>@string/theme_entry_default</item>
+        <item>@string/theme_entry_light</item>
+        <item>@string/theme_entry_dark</item>
+    </string-array>
+    <string-array name="font_size_entries">
+        <item>Small</item>
+        <item>Medium</item>
+        <item>Large</item>
+    </string-array>
+    <string-array name="font_size_values">
+        <item>14</item>
+        <item>16</item>
+        <item>18</item>
+    </string-array>
+</resources>

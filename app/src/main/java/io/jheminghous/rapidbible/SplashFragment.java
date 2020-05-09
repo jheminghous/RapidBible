@@ -9,7 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-class SplashFragment extends Fragment
+public class SplashFragment extends Fragment
 {
     @Nullable
     @Override
