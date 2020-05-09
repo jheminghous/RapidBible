@@ -124,7 +124,7 @@ public class ReferenceFragment extends Fragment
                 _adapter.setRoot(root);
                 _linearLayoutManager.scrollToPosition(scrollPosition);
 
-                _provider.getToolbar().setTitle("Reference");
+                _provider.setTitle("Reference");
             }
             else if (position == 1)
             {
@@ -149,7 +149,7 @@ public class ReferenceFragment extends Fragment
                 _adapter.setRoot(root);
                 _gridLayoutManager.scrollToPosition(scrollPosition);
 
-                _provider.getToolbar().setTitle("Reference - " + _adapter.getRoot().getText());
+                _provider.setTitle("Reference - " + _adapter.getRoot().getText());
             }
             else if (position == 2)
             {
@@ -180,8 +180,8 @@ public class ReferenceFragment extends Fragment
                 _adapter.setRoot(root);
                 _gridLayoutManager.scrollToPosition(scrollPosition);
 
-                _provider.getToolbar().setTitle("Reference - " + root.getParent().getText() +
-                                                " " + root.getNumber());
+                _provider.setTitle("Reference - " + root.getParent().getText() + " " +
+                                   root.getNumber());
             }
         }
 

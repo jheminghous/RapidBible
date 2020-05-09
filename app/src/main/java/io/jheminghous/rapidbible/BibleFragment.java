@@ -64,9 +64,7 @@ public class BibleFragment extends Fragment
 
         _recyclerView.addOnScrollListener(_savePositionScrollListener);
 
-        _titleUpdater = new TitleUpdater(_provider.getToolbar(),
-                                         _recyclerView,
-                                         _provider.getVersion());
+        _titleUpdater = new TitleUpdater(_provider, _recyclerView);
 
         _settingsFragment = new SettingsFragment();
 

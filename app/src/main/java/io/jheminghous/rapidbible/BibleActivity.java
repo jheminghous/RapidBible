@@ -3,6 +3,7 @@ package io.jheminghous.rapidbible;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.TextView;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -17,6 +18,7 @@ public class BibleActivity extends AppCompatActivity implements BibleProvider
     private BibleVersion _version;
 
     private Toolbar _toolbar;
+    private TextView _toolbarTitle;
 
     private SplashFragment _splashFragment;
     private BibleFragment _bibleFragment;
@@ -39,22 +41,22 @@ public class BibleActivity extends AppCompatActivity implements BibleProvider
 
         getSupportFragmentManager().addOnBackStackChangedListener(_backStackListener);
 
-        showFragment(_splashFragment, false);
-
         _toolbar = findViewById(R.id.toolbar);
+        _toolbar.setTitle("");
+        _toolbarTitle = _toolbar.findViewById(R.id.toolbar_title);
         setSupportActionBar(_toolbar);
 
-        _toolbar.setOnClickListener(new View.OnClickListener()
+        _toolbarTitle.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
-                if (!_bibleFragment.isVisible()) return;
-
                 _currentItem = _bibleFragment.getCurrentItem();
                 showFragment(_referenceFragment, true);
             }
         });
+
+        showFragment(_splashFragment, false);
     }
 
     @Override
@@ -97,9 +99,19 @@ public class BibleActivity extends AppCompatActivity implements BibleProvider
     }
 
     @Override
-    public Toolbar getToolbar()
+    public void setTitle(String title)
     {
-        return _toolbar;
+        if (_bibleFragment.isVisible())
+        {
+            _toolbar.setTitle("");
+            _toolbarTitle.setVisibility(View.VISIBLE);
+            _toolbarTitle.setText(title);
+        }
+        else
+        {
+            _toolbarTitle.setVisibility(View.GONE);
+            _toolbar.setTitle(title);
+        }
     }
 
     @Override

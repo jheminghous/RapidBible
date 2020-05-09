@@ -3,7 +3,6 @@ package io.jheminghous.rapidbible;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -11,31 +10,27 @@ class TitleUpdater
 {
     private static final String TAG = TitleUpdater.class.getSimpleName();
 
-    private Toolbar _toolBar;
+    private BibleProvider _provider;
 
-    private RecyclerView _recylerView;
+    private RecyclerView _recyclerView;
     private LinearLayoutManager _layoutManager;
 
-    private BibleVersion _version;
-
-    TitleUpdater(Toolbar toolbar, RecyclerView recyclerView, BibleVersion version)
+    TitleUpdater(BibleProvider provider, RecyclerView recyclerView)
     {
-        _toolBar = toolbar;
+        _provider = provider;
 
-        _recylerView = recyclerView;
-        if (_recylerView.getLayoutManager() instanceof LinearLayoutManager)
+        _recyclerView = recyclerView;
+        if (_recyclerView.getLayoutManager() instanceof LinearLayoutManager)
         {
-            _layoutManager = (LinearLayoutManager) _recylerView.getLayoutManager();
+            _layoutManager = (LinearLayoutManager) _recyclerView.getLayoutManager();
         }
-
-        _version = version;
     }
 
     void start()
     {
-        if (_toolBar == null)
+        if (_provider == null)
         {
-            Log.e(TAG, "Could not start because the tool bar is null");
+            Log.e(TAG, "Could not start because the provider is null");
             return;
         }
 
@@ -45,12 +40,12 @@ class TitleUpdater
             return;
         }
 
-        _recylerView.addOnScrollListener(_scrollListener);
+        _recyclerView.addOnScrollListener(_scrollListener);
     }
 
     void stop()
     {
-        _recylerView.removeOnScrollListener(_scrollListener);
+        _recyclerView.removeOnScrollListener(_scrollListener);
     }
 
     private RecyclerView.OnScrollListener _scrollListener = new RecyclerView.OnScrollListener()
@@ -62,7 +57,7 @@ class TitleUpdater
             BibleItem chapter = null;
 
             int position = _layoutManager.findFirstVisibleItemPosition();
-            BibleItem item = _version.getItems().get(position);
+            BibleItem item = _provider.getVersion().getItems().get(position);
             switch (item.getType())
             {
                 case VERSE:
@@ -82,7 +77,7 @@ class TitleUpdater
             {
                 title += " " + chapter.getNumber();
             }
-            _toolBar.setTitle(title);
+            _provider.setTitle(title);
         }
     };
 }
