@@ -10,7 +10,7 @@
         android:title="@string/theme_title"
         app:useSimpleSummaryProvider="true" />
     <ListPreference
-        android:defaultValue="16"
+        android:defaultValue="18"
         android:entries="@array/font_size_entries"
         android:entryValues="@array/font_size_values"
         android:key="@string/font_size_key"
