@@ -16,4 +16,5 @@
         android:key="@string/font_size_key"
         android:title="@string/font_size_title"
         app:useSimpleSummaryProvider="true" />
+
 </PreferenceScreen>
