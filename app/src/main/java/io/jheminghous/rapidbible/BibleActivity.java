@@ -1,6 +1,5 @@
 package io.jheminghous.rapidbible;
 
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
@@ -11,16 +10,12 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.preference.PreferenceManager;
 
 public class BibleActivity extends AppCompatActivity implements BibleProvider
 {
-    private BibleVersion _version;
-
     private Toolbar _toolbar;
     private TextView _toolbarTitle;
 
-    private SplashFragment _splashFragment;
     private BibleFragment _bibleFragment;
     private ReferenceFragment _referenceFragment;
 
@@ -30,12 +25,9 @@ public class BibleActivity extends AppCompatActivity implements BibleProvider
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-
-        setTheme(R.style.AppTheme);
         
         setContentView(R.layout.activity_main);
 
-        _splashFragment = new SplashFragment();
         _bibleFragment = new BibleFragment();
         _referenceFragment = new ReferenceFragment();
 
@@ -56,30 +48,7 @@ public class BibleActivity extends AppCompatActivity implements BibleProvider
             }
         });
 
-        showFragment(_splashFragment, false);
-    }
-
-    @Override
-    protected void onResume()
-    {
-        super.onResume();
-
-        final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-
-        new VersionLoader("KJV",
-                          getResources().openRawResource(R.raw.kjv),
-                          new VersionLoader.Listener()
-                          {
-                              @Override
-                              public void onLoaded(BibleVersion version)
-                              {
-                                  _version = version;
-
-                                  showFragment(_bibleFragment, false);
-
-                                  _toolbar.setVisibility(View.VISIBLE);
-                              }
-                          });
+        showFragment(_bibleFragment, false);
     }
 
     @Override
@@ -89,11 +58,8 @@ public class BibleActivity extends AppCompatActivity implements BibleProvider
 
         _referenceFragment = null;
         _bibleFragment = null;
-        _splashFragment = null;
 
         _toolbar = null;
-
-        _version = null;
 
         super.onDestroy();
     }
@@ -129,7 +95,8 @@ public class BibleActivity extends AppCompatActivity implements BibleProvider
     @Override
     public BibleVersion getVersion()
     {
-        return _version;
+        BibleApplication app = (BibleApplication) getApplication();
+        return app.getVersion();
     }
 
     @Override

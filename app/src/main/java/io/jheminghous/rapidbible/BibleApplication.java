@@ -7,6 +7,8 @@ import androidx.preference.PreferenceManager;
 
 public class BibleApplication extends Application
 {
+    private BibleVersion _version;
+
     @Override
     public void onCreate()
     {
@@ -19,5 +21,15 @@ public class BibleApplication extends Application
         {
             SettingsFragment.setTheme(theme, getResources());
         }
+    }
+
+    public BibleVersion getVersion()
+    {
+        return _version;
+    }
+
+    public void setVersion(BibleVersion version)
+    {
+        _version = version;
     }
 }

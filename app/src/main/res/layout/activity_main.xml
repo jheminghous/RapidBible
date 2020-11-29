@@ -15,7 +15,6 @@
         android:background="?colorPrimary"
         android:elevation="4dp"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        android:visibility="gone"
         app:popupTheme="@style/ThemeOverlay.AppCompat.DayNight"
         tools:targetApi="lollipop">
 

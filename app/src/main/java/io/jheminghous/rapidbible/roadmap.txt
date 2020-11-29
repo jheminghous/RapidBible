@@ -1,3 +1,6 @@
+-History
+-Improve layout
+-Add layout settings preview
 -About
 -Sharing (copy, text message, email, etc.)
 -Highlighting or underlining
