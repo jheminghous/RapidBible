@@ -68,6 +68,7 @@ public class ReferenceFragment extends Fragment
         if (item.getItemId() == R.id.history_item)
         {
             _provider.showFragment(_historyFragment, true);
+            return true;
         }
         return false;
     }

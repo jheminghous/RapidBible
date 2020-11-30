@@ -35,6 +35,7 @@ public class BibleFragment extends Fragment
     private TitleUpdater _titleUpdater;
 
     private SettingsFragment _settingsFragment;
+    private AboutFragment _aboutFragment;
 
     private Handler _handler = new Handler();
     private long _nextSaveTime = SystemClock.uptimeMillis();
@@ -68,6 +69,7 @@ public class BibleFragment extends Fragment
         _titleUpdater = new TitleUpdater(_provider, _recyclerView);
 
         _settingsFragment = new SettingsFragment();
+        _aboutFragment = new AboutFragment();
 
         setHasOptionsMenu(true);
 
@@ -86,6 +88,12 @@ public class BibleFragment extends Fragment
         if (item.getItemId() == R.id.settings_item)
         {
             showSettings();
+            return true;
+        }
+        if (item.getItemId() == R.id.about_item)
+        {
+            _provider.showFragment(_aboutFragment, true);
+            return true;
         }
         return false;
     }
