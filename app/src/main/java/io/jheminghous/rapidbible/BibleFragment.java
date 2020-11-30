@@ -1,5 +1,6 @@
 package io.jheminghous.rapidbible;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
@@ -97,10 +98,10 @@ public class BibleFragment extends Fragment
         _titleUpdater.start();
 
         FragmentActivity activity = getActivity();
-        if (activity != null &&
-            activity.getIntent().getBooleanExtra(SettingsFragment.CHANGING_THEME, false))
+        Intent intent = activity != null ? activity.getIntent() : null;
+        if (intent != null && intent.getBooleanExtra(SettingsFragment.CHANGING_THEME, false))
         {
-            activity.getIntent().removeExtra(SettingsFragment.CHANGING_THEME);
+            intent.removeExtra(SettingsFragment.CHANGING_THEME);
             showSettings();
         }
     }

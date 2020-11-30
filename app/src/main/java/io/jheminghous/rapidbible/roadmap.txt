@@ -1,6 +1,6 @@
--History
--Improve layout
--Add layout settings preview
+-Fix reference expand/collapse scroll position
+-Improve/simplify font size/spacing
+-Add font size/spacing settings preview
 -About
 -Sharing (copy, text message, email, etc.)
 -Highlighting or underlining

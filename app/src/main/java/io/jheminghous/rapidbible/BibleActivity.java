@@ -1,6 +1,8 @@
 package io.jheminghous.rapidbible;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.TextView;
 
@@ -10,6 +12,10 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
 
 public class BibleActivity extends AppCompatActivity implements BibleProvider
 {
@@ -115,12 +121,52 @@ public class BibleActivity extends AppCompatActivity implements BibleProvider
     @Override
     public void setCurrentItem(BibleItem item)
     {
+        saveHistory();
+
         _currentItem = item;
 
-        if (_referenceFragment.isVisible())
+        saveHistory();
+
+        while (!_bibleFragment.isVisible())
         {
-            getSupportFragmentManager().popBackStack();
+            getSupportFragmentManager().popBackStackImmediate();
         }
+    }
+
+
+    private void saveHistory()
+    {
+        final String KEY = getString(R.string.history_key);
+
+        SharedPreferences preferences =
+                PreferenceManager.getDefaultSharedPreferences(this);
+        String history = preferences.getString(KEY, "");
+        assert history != null;
+
+        List<String> entries = new LinkedList<>(Arrays.asList(history.split(",")));
+        String newEntry = String.valueOf(getVersion().getItems().indexOf(_currentItem));
+        int currentIndex = entries.indexOf(newEntry);
+        if (currentIndex >= 0)
+        {
+            entries.remove(currentIndex);
+        }
+        entries.add(0, newEntry);
+        if (entries.size() > HistoryFragment.MAX_HISTORY_ENTRIES)
+        {
+            entries.remove(entries.size() - 1);
+        }
+
+        StringBuilder builder = new StringBuilder(entries.size() * 2 - 1);
+        builder.append(entries.get(0));
+        for (int i = 1; i < entries.size(); ++i)
+        {
+            builder.append(",")
+                   .append(entries.get(i));
+        }
+
+        preferences.edit()
+                   .putString(KEY, builder.toString())
+                   .apply();
     }
 
     private FragmentManager.OnBackStackChangedListener _backStackListener =

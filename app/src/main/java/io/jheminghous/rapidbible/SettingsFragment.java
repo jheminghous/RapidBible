@@ -27,7 +27,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
             BibleProvider provider = (BibleProvider) getActivity();
             if (provider != null)
             {
-                provider.setTitle(getString(R.string.settings));
+                provider.setTitle(getString(R.string.settings_title));
             }
         }
         catch (ClassCastException e)
