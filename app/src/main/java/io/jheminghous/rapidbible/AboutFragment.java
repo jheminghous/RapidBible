@@ -1,9 +1,11 @@
 package io.jheminghous.rapidbible;
 
 import android.os.Bundle;
+import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -29,7 +31,17 @@ public class AboutFragment extends Fragment
                                                BibleProvider.class.getSimpleName());
         }
 
-        return inflater.inflate(R.layout.about, container, false);
+        View view = inflater.inflate(R.layout.about, container, false);
+
+        TextView version = view.findViewById(R.id.version);
+        version.setText(getResources().getString(R.string.app_version,
+                                                 BuildConfig.BUILD_DATE,
+                                                 BuildConfig.GIT_HASH));
+
+        TextView description = view.findViewById(R.id.description);
+        description.setMovementMethod(LinkMovementMethod.getInstance());
+
+        return view;
     }
 
     @Override

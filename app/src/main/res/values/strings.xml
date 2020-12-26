@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">RapidBible</string>
 
+    <string name="app_version">Version %1$s %2$s</string>
+
     <string name="book">Book</string>
     <string name="chapter">Chapter</string>
     <string name="verse">Verse</string>
@@ -23,7 +25,7 @@
 
     <string name="app_description">
         A minimalist Bible app designed with offline use in mind\n\n\n
-        Report bugs at: https://github.com/jheminghous/RapidBible/issues\n\n
-        See the feature roadmap at: https://github.com/jheminghous/RapidBible/wiki/Feature-Roadmap
+        Report bugs <a href="https://github.com/jheminghous/RapidBible/issues">here</a>\n\n
+        See the feature roadmap <a href="https://github.com/jheminghous/RapidBible/wiki/Feature-Roadmap">here</a>
     </string>
 </resources>

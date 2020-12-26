@@ -1,4 +1,17 @@
+import java.text.SimpleDateFormat
+
 apply plugin: 'com.android.application'
+
+def buildDate = new SimpleDateFormat("yyyyMMdd").format(Calendar.getInstance().getTime())
+
+def gitHash = { ->
+    def stdout = new ByteArrayOutputStream()
+    exec {
+        commandLine 'git', 'rev-parse', '--short', 'HEAD'
+        standardOutput = stdout
+    }
+    return stdout.toString().trim()
+}
 
 android {
     compileSdkVersion 29
@@ -6,8 +19,10 @@ android {
         applicationId "io.jheminghous.rapidbible"
         minSdkVersion 19
         targetSdkVersion 29
-        versionCode 1
-        versionName "1.0"
+        versionCode Integer.parseInt(buildDate)
+        versionName "${buildDate}"
+        buildConfigField "String", "BUILD_DATE", "\"${buildDate}\""
+        buildConfigField "String", "GIT_HASH", "\"${gitHash}\""
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary = true
